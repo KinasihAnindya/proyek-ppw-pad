@@ -36,10 +36,21 @@
             </select>
         </p>
 
-        <p>
-            <label>Tanggal Publikasi:</label><br>
-            <input type="text" name="tanggal_publikasi" class="date" value="{{ old('tanggal_publikasi', is_object($berita->tanggal_publikasi) ? $berita->tanggal_publikasi->format('Y-m-d') : $berita->tanggal_publikasi) }}" placeholder="yyyy-mm-dd">
-        </p>
+        <div class="mb-3">
+    <label for="tanggal_publikasi" class="form-label fw-semibold">Tanggal Publikasi</label>
+    <div class="input-group">
+        <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
+        <input type="date" 
+               class="form-control @error('tanggal_publikasi') is-invalid @enderror" 
+               id="tanggal_publikasi" 
+               name="tanggal_publikasi" 
+               value="{{ old('tanggal_publikasi', \Carbon\Carbon::parse($berita->tanggal_publikasi)->format('Y-m-d')) }}" 
+               required>
+    </div>
+    @error('tanggal_publikasi')
+        <div class="text-danger small mt-1">{{ $message }}</div>
+    @enderror
+</div>
 
         <p>
             <label>Ringkasan Isi:</label><br>

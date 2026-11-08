@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeritaIsuController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 
 Route::get('/', function () {
@@ -19,4 +20,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('berita', BeritaIsuController::class)->parameters([
         'berita' => 'berita'
     ]);
+});
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::resource('berita', BeritaIsuController::class);
+});
+
+Route::group(['middleware' => ['auth', 'admin']], function () {
+    Route::resource('users', UserController::class); // CRUD Users
 });

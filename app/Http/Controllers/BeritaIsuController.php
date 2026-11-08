@@ -104,4 +104,9 @@ class BeritaIsuController extends Controller
 
         return redirect('/berita')->with('pesan', 'Data Berita Berhasil Dihapus!');
     }
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 }

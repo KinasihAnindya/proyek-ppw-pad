@@ -6,10 +6,13 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\GalleryController;
 
 Route::get('/', function () {
     return redirect('/login');
 });
+
+Route::get('/detail-lowongan/{title}', [JobController::class, 'galeriLowongan']) -> name('galeri.lowongan');
 
 Auth::routes([
     'register' => false,
@@ -27,4 +30,5 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::resource('users', UserController::class);
     Route::resource('jobs', JobController::class);
+    Route::resource('gallery', GalleryController::class);
 });

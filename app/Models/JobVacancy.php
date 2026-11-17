@@ -13,6 +13,7 @@ class JobVacancy extends Model
 
     protected $fillable = [
         'title',
+        'job_seo',
         'description',
         'location',
         'company',
@@ -20,4 +21,9 @@ class JobVacancy extends Model
         'logo',
         'salary',
     ];
+
+    public function photos()
+    {
+        return $this->hasMany(JobGallery::class, 'job_vacancy_id', 'id');
+    }
 }

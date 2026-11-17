@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\JobVacancy as Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class JobController extends Controller
 {
@@ -37,6 +38,7 @@ class JobController extends Controller
 
         Job::create([
             'title'       => $request->title,
+            'job_seo'     => Str::slug($request->title),
             'description' => $request->description,
             'location'    => $request->location,
             'company'     => $request->company,
@@ -70,7 +72,6 @@ class JobController extends Controller
 
         $logoPath = $job->logo;
         if ($request->hasFile('logo')) {
-            // Hapus logo lama jika ada
             if ($job->logo && Storage::disk('public')->exists($job->logo)) {
                 Storage::disk('public')->delete($job->logo);
             }
@@ -79,6 +80,7 @@ class JobController extends Controller
 
         $job->update([
             'title'       => $request->title,
+            'job_seo'     => Str::slug($request->title),
             'description' => $request->description,
             'location'    => $request->location,
             'company'     => $request->company,
@@ -99,5 +101,12 @@ class JobController extends Controller
         $job->delete();
 
         return redirect()->route('jobs.index')->with('success', 'Lowongan kerja berhasil dihapus.');
+    }
+
+    public function galeriLowongan($title) {
+        $job = Job::where('job_seo', $title)->firstOrFail();
+        $galleries = $job->photos()->orderBy('id', 'desc')->paginate(6);
+
+        return view('jobs.galeri', compact('job', 'galleries'));
     }
 }

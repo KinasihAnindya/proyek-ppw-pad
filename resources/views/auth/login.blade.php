@@ -37,6 +37,14 @@
                 </div>
 
                 <div class="card-body p-4">
+                    {{-- 1. Alert Error (misal: jika bukan @mail.ugm.ac.id) --}}
+                    @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show small" role="alert">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>{{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="mb-3">
@@ -69,6 +77,16 @@
                             </button>
                         </div>
                     </form>
+
+                    {{-- 2. Tombol Login dengan Google --}}
+                    <div class="text-center my-3 text-muted small">atau</div>
+
+                    <div class="d-grid">
+                        <a href="{{ route('google.redirect') }}" class="btn btn-outline-danger btn-lg fw-semibold d-flex align-items-center justify-content-center gap-2">
+                            <i class="fa-brands fa-google"></i>
+                            <span class="fs-6">Login dengan Google</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

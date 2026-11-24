@@ -7,7 +7,7 @@
     <div class="card-body p-4">
         <div class="mb-4">
             <h3 class="fw-bold text-primary mb-1">
-                <i class="fa-solid fa-gauge me-2"></i>Dashboard Utama Admin
+                <i class="fa-solid fa-gauge me-2"></i>Dashboard Utama User
             </h3>
             <p class="text-muted mb-0">Selamat datang kembali, <strong>{{ Auth::user()->name }}</strong>! Anda telah berhasil login ke Sistem Pengelolaan Berita & Isu serta Portal Lowongan Kerja.</p>
         </div>

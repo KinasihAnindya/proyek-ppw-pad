@@ -38,33 +38,96 @@
                         </li>
                     @endif
                 </ul>
-                <ul class="navbar-nav ms-auto">
+
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
                     @auth
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-secondary fw-normal" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-user-circle me-1"></i> {{ Auth::user()->name }} ({{ Auth::user()->level }})
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm rounded-3 mt-2" aria-labelledby="navbarDropdown">
-                            <li>
-                                <a class="dropdown-item text-danger py-2" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+                        {{-- Dropdown Notifikasi Khusus Admin --}}
+                        @if(Auth::user()->level == 'admin')
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-secondary position-relative" href="#" id="navbarNotifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-bell"></i>
+                                    @if(Auth::user()->unreadNotifications->count() > 0)
+                                        <span class="badge rounded-pill bg-danger">
+                                            {{ Auth::user()->unreadNotifications->count() }}
+                                        </span>
+                                    @endif
                                 </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm rounded-3 mt-2 p-2" aria-labelledby="navbarNotifDropdown" style="min-width: 310px;">
+                                    <li class="dropdown-header fw-bold text-dark d-flex justify-content-between align-items-center">
+                                        <span>Notifikasi Admin</span>
+                                        <span class="badge bg-secondary">{{ Auth::user()->unreadNotifications->count() }} baru</span>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+
+                                    @forelse(Auth::user()->notifications()->latest()->take(5)->get() as $notif)
+                                        <li class="px-2 py-2 border-bottom small rounded {{ $notif->read_at ? 'text-muted' : 'fw-semibold text-dark bg-light' }}">
+                                            <div>{{ $notif->data['pesan'] ?? 'Notifikasi baru' }}</div>
+                                            <div class="text-muted mt-1" style="font-size: 11px;">
+                                                {{ $notif->created_at->diffForHumans() }}
+                                            </div>
+                                        </li>
+                                    @empty
+                                        <li class="px-2 py-3 text-muted small text-center">
+                                            Belum ada notifikasi.
+                                        </li>
+                                    @endforelse
+
+                                    @if(Auth::user()->unreadNotifications->count() > 0)
+                                        <li class="mt-2">
+                                            <form action="{{ route('notifikasi.baca') }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-primary w-100">
+                                                    Tandai semua dibaca
+                                                </button>
+                                            </form>
+                                        </li>
+                                    @endif
+                                </ul>
                             </li>
-                        </ul>
-                    </li>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
+                        @endif
+
+                        {{-- Dropdown Profil & Logout --}}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-secondary fw-normal d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @if(Auth::user()->avatar)
+                                    <img src="{{ Auth::user()->avatar }}" alt="Avatar" class="rounded-circle me-2" width="26" height="26" referrerpolicy="no-referrer">
+                                @else
+                                    <i class="fa-solid fa-user-circle me-1"></i>
+                                @endif
+                                <span>{{ Auth::user()->name }} ({{ Auth::user()->level }})</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm rounded-3 mt-2" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item text-danger py-2" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
                     @endauth
                 </ul>
             </div>
         </div>
     </nav>
+
     <main class="container pb-5">
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa-solid fa-circle-check me-1"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         @yield('content')
     </main>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('lightbox2/dist/js/lightbox-plus-jquery.min.js') }}"></script>
+    <script src="{{ asset('lightbox2/dist/js/lightbox-plus-jquery.min.js') }}"></script>
 </body>
 </html>

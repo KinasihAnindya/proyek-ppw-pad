@@ -49,7 +49,7 @@
                         <th width="5%">No</th>
                         <th width="30%">Judul Berita</th>
                         <th width="15%">Kategori</th>
-                        <th>Isi / Ringkasan</th>
+                        <th>Ringkasan</th>
                         <th width="15%">Tanggal Publikasi</th>
                         <th width="18%" class="text-center">Aksi</th>
                     </tr>
